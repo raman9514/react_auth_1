@@ -2,13 +2,21 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router"
 import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const access_token = useSelector(((state) => state.auth.access ))
+  const dispatch = useDispatch()
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const logoutHandle = ()=>{
+    dispatch(logout())
+  }
 
   return (
     <header className="bg-white shadow-md ">
@@ -18,9 +26,10 @@ const Header = () => {
         {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-6 text-gray-700">
           <NavLink to={'/'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Home</NavLink> 
-          <NavLink to={'/dashboard'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Dashboard</NavLink> 
-          <NavLink to={'/login'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Login</NavLink> 
-          <NavLink to={'/register'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Register</NavLink> 
+          { access_token ? <NavLink to={'/dashboard'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Dashboard</NavLink>: false }
+          {!access_token?<NavLink to={'/login'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Login</NavLink>:false }
+          {!access_token?<NavLink to={'/register'} className={({ isActive }) =>`px-4 py-2 font-medium hover:text-blue-600 transition ${ isActive ? "text-blue-600 underline" : "text-gray-700"}`}>Register</NavLink>:false} 
+          {access_token?<a  onClick={logoutHandle}  className="px-4 py-2 font-medium text-red-600 transition ">Logout</a>:false} 
         </nav>
 
         {/* Mobile Menu Toggle */}

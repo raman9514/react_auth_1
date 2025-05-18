@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   // Simulated user data (can come from props, context, or API)
-  const authData = useSelector(((state) => state.auth.value ))
+  const authData = useSelector(((state) => state.auth.access ))
   const user = {
     name: "John Doe",
     email: "john@example.com",
@@ -18,7 +18,7 @@ const Dashboard = () => {
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
         {
-          authData.user? authData.user.email : "User is not logged in"
+          authData? "user is loginned" : "User is not logged in"
         }
         <div className="space-y-4">
           <div className="flex justify-between">

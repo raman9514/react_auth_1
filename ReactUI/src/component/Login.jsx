@@ -3,6 +3,7 @@ import { login } from "../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginUserMutation } from "../services/authentication";
 
+
 const Login = () => {
   const [loginUser, {isLoading}] = useLoginUserMutation()
   const [formError,setFormError] = useState({})
@@ -10,7 +11,7 @@ const Login = () => {
     username: "",
     password: ""
   });
-  const user = useSelector(((state) => state.value))
+  const user = useSelector(((state) => state.access))
   const dispatch = useDispatch()
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -23,15 +24,22 @@ const Login = () => {
     e.preventDefault();
     // console.log("Login data:", formData);
     // dispatch(login({user:formData}))
-    console.log("user : ",{user:formData})
     const res = await loginUser(formData)
-    console.log(res)
     if(res.error){
-      console.log(res.error.data)
       setFormError(res.error.data)
     }
     else if(res.data){
-      console.log(res.data)
+      localStorage.setItem('refresh', res.data.refresh);
+      localStorage.setItem('access', res.data.access);
+      data = dispatch(login({
+        refresh:res.data.refresh,
+        access:res.data.access
+      }))
+      setFormData({
+        username: "",
+        password: ""
+      })
+
     }
     // Add your login logic here (e.g. API call)
   };
